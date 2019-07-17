@@ -7,6 +7,7 @@
   "dependencies": {
     "cross-env": "^5.2.0",
     "dotenv": "^8.0.0",
+    "forever": "^1.0.0",
     "joi": "^14.3.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
@@ -15,7 +16,6 @@
     "nodemon": "^1.19.1"
   },
   "scripts": {
-    "start": "cross-env NOED_PATH=src node src",
-    "start:dev": "cross-env NODE_PATH=src nodemon --watch src/ src/index.js"
+    "start": "cross-env NODE_PATH=src nodemon --watch src/ src/index.js"
   }
 }

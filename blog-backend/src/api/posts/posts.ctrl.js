@@ -43,9 +43,10 @@ exports.write = async (ctx) => {
         ctx.throw(e, 500)
     }
 }
-
 exports.list = async (ctx) => {
     const page = parseInt(ctx.query.page || 1,10);
+    console.log('list');
+    
     if(page < 1){
         ctx.status = 400
         return;
