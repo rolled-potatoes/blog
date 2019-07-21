@@ -2,8 +2,7 @@ const Post = require('models/post')
 const {
     ObjectId
 } = require('mongoose').Types
-const Joi = require('joi')
-
+const Joi = require('@hapi/joi');
 exports.checkObjectId = (ctx, next) => {
     const {
         id
@@ -18,7 +17,7 @@ exports.write = async (ctx) => {
     const schema = Joi.object().keys({
         title: Joi.string().required(),
         body: Joi.string().required(),
-        tags: Joi.array().item(Joi.string()).required(),
+        tags: Joi.array().items(Joi.string()).required(),
     })
     const result = Joi.validate(ctx.request.body, schema)
     if (result.error) {
@@ -45,14 +44,17 @@ exports.write = async (ctx) => {
 }
 exports.list = async (ctx) => {
     const page = parseInt(ctx.query.page || 1,10);
-    console.log('list');
-    
+    const {tag} = ctx.query;
+    const query = tag ?{
+        tags: tag
+    }:{}
+
     if(page < 1){
         ctx.status = 400
         return;
     }
     try {
-        const posts = await Post.find()
+        const posts = await Post.find(query)
         .sort({
             _id: -1
         })
@@ -60,10 +62,10 @@ exports.list = async (ctx) => {
         .lean()
         .skip((page-1)*10)
         .exec();
-        const postCount = await Post.countDocuments().exec();
+        const postCount = await Post.countDocuments(query).exec();
         const limitBodyLength = post =>({
             ...post,
-            body: post.body.length < 200 ? post.body: `${post.body.slice(0,200)}...`
+            body: post.body.length < 350 ? post.body: `${post.body.slice(0,350)}...`
         })
         
         ctx.body = posts.map(limitBodyLength)
@@ -121,4 +123,12 @@ exports.update = async (ctx) => {
     } catch (e) {
         ctx.throw(e, 500)
     }
+}
+
+exports.checkLogin = (ctx,next)=>{
+    if(!ctx.session.logged){
+        ctx.status =401;
+        return null
+    }
+    return next;
 }

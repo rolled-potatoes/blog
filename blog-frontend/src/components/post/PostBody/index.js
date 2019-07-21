@@ -2,13 +2,13 @@
 import React from 'react'
 import classNames from 'classnames'
 import styles from './styles.scss'
-
+import MarkdownRender from '../../../components/common/MarkdownRender/MarkdownRender'
 const cx = classNames.bind(styles)
 
-const PostBody = ({ }) => (
+const PostBody = ({body}) => (
   <div className ={cx('post-body')}>
     <div className={cx('paper')}>
-      내용
+      <MarkdownRender markdown = {body}/>
     </div>
   </div>
 );

@@ -43,6 +43,7 @@ class EditorPane extends React.Component {
     if (prevProps.markdown !== this.props.markdown) {
       const { codeMirror, cursor } = this
       if (!codeMirror) return
+      codeMirror.setValue(this.props.markdown)
       if(!cursor) return 
       codeMirror.setCursor(cursor)
     }

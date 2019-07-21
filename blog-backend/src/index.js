@@ -1,7 +1,10 @@
 require('dotenv').config();
+const session = require('koa-session')
+
 const {
     PORT: port = 4000,
-    MONGO_URI: mongoURI
+    MONGO_URI: mongoURI,
+    COOKIE_SIGN_KEY : signkey
 } = process.env;
 
 const Koa = require('koa');
@@ -23,7 +26,11 @@ mongoose.connect(mongoURI, {
 
 router.use('/api', api.routes())
 app.use(bodyParser())
-
+const sessionConfig = {
+    masAge : 86400000
+}
+app.use(session(sessionConfig,app))
+app.keys= [signkey]
 app.use(router.routes()).use(router.allowedMethods())
 
 app.listen(port, () => {
